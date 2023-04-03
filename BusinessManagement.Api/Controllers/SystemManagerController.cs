@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers
 {
-    [Route("api/systemController")]
+    [Route("api/systemManager")]
     [ApiController]
     public class SystemManagerController : ControllerBase
     {

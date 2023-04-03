@@ -9,7 +9,11 @@ internal static class EmployeeFactory
    internal static Employees MapToEmployee(
        CreationEmployeeDTO creationEmployeeDTO)
     {
+        var address = AddressFactory.MapToAddress(
+                creationEmployeeDTO.CreationAddressDTO);
+
         var randomSalt = Guid.NewGuid().ToString();
+
         return new Employees()
         {
             Id = Guid.NewGuid(),
@@ -24,8 +28,8 @@ internal static class EmployeeFactory
             EmploymentType = creationEmployeeDTO.employmentType,
             TellNumber = creationEmployeeDTO.tellNumber,
             LegalPersonId = creationEmployeeDTO.legalPersonId,
-            Address = AddressFactory.MapToAddress(
-                creationEmployeeDTO.CreationAddressDTO)
+            Address = address,
+            AddressId = address.Id,
 
         };
     }
@@ -59,7 +63,7 @@ internal static class EmployeeFactory
             employmentType: employee.EmploymentType,
             salary: employee.Salary,
             tellNumber: employee.TellNumber,
-            legalPersonDTO: LegalPersonFactory.MapToLegalPersonDTO(employee.LegalPerson),
-            addressDTO: AddressFactory.MapToAddressDto(employee.Address));
+            legalPersonDTO: LegalPersonFactory.MapToLegalPersonDTO(employee.LegalPerson)?? null,
+            addressDTO: AddressFactory.MapToAddressDto(employee.Address) ?? null);
     }
 }
