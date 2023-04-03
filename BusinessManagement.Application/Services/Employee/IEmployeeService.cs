@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Employee;
+using BusinessManagement.Application.ServiceModel;
 
 namespace BusinessManagement.Application.Services.Employee;
 
@@ -8,7 +9,7 @@ public interface IEmployeeService
         CreationEmployeeDTO creationEmployeeDTO);
     ValueTask<EmployeeDTO> UpdateEmployeeAsync(
         ModifyEmployeeDTO modifyEmployeeDTO);
-    IQueryable<EmployeeDTO> RetrieveAllEmployeees();
+    IQueryable<EmployeeDTO> RetrieveAllEmployeees(QueryParameter queryParameter);
     ValueTask<EmployeeDTO> RetrieveEmployeeByIdAsync(Guid id);
     ValueTask<EmployeeDTO> DeleteEmployeeAsync(Guid id);
 }

@@ -1,17 +1,22 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Employee;
 using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Domain.Entities;
 using BusinessManagement.Infastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services.Employee;
 
 public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository employeeRepository;
+    private readonly IHttpContextAccessor httpContextAccesssor;
 
-    public EmployeeService(IEmployeeRepository employeeRepository)
+    public EmployeeService(IEmployeeRepository employeeRepository,
+        IHttpContextAccessor httpContextAccesssor = null)
     {
         this.employeeRepository = employeeRepository;
+        this.httpContextAccesssor = httpContextAccesssor;
     }
 
     public async ValueTask<EmployeeDTO> CreateEmployeeAsync(
@@ -45,12 +50,16 @@ public class EmployeeService : IEmployeeService
         return EmployeeFactory.MapToEmployeeDto(updatedEmployee);
     }
 
-    public IQueryable<EmployeeDTO> RetrieveAllEmployeees()
+    public IQueryable<EmployeeDTO> RetrieveAllEmployeees(QueryParameter queryParameter)
     {
         var employees = this.employeeRepository.SelectAll();
 
-        return employees.Select(employee => EmployeeFactory
-        .MapToEmployeeDto(employee));
+        var pagedEmployes = employees.PagedList(
+            httpContext: httpContextAccesssor.HttpContext,
+            queryParameter: queryParameter);
+
+        return pagedEmployes.Select(employee => EmployeeFactory
+            .MapToEmployeeDto(employee));
     }
 
     public async ValueTask<EmployeeDTO> RetrieveEmployeeByIdAsync(Guid id)

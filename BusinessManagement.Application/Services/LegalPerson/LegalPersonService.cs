@@ -1,17 +1,23 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
 using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Domain.Entities;
 using BusinessManagement.Infastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services;
 
 public class LegalPersonService : ILegalPersonService
 {
     private readonly ILegalPersonRepository _legalPersonRepository;
+    private readonly IHttpContextAccessor httpContextAccesssor;
 
-    public LegalPersonService(ILegalPersonRepository legalPersonRepository)
+
+    public LegalPersonService(ILegalPersonRepository legalPersonRepository,
+        IHttpContextAccessor httpContextAccesssor)
     {
         _legalPersonRepository = legalPersonRepository;
+        this.httpContextAccesssor = httpContextAccesssor;
     }
 
     public async ValueTask<LegalPersonDTO> CreateLegalPersonAsync(
@@ -58,12 +64,17 @@ public class LegalPersonService : ILegalPersonService
         return LegalPersonFactory.MapToLegalPersonDTO(storageLegalPerson);
     }
 
-    public IQueryable<LegalPersonDTO> RetrieveLegalPersons()
+    public IQueryable<LegalPersonDTO> RetrieveLegalPersons(
+        QueryParameter queryParameter)
     {
         var storageLegalPersons = this._legalPersonRepository
            .SelectAll();
 
-        return storageLegalPersons.Select(storageLegalPerson => LegalPersonFactory
+        var paginatedAPersons = storageLegalPersons.PagedList(
+            httpContext: httpContextAccesssor.HttpContext,
+            queryParameter: queryParameter);
+
+        return paginatedAPersons.Select(storageLegalPerson => LegalPersonFactory
             .MapToLegalPersonDTO(storageLegalPerson));
     }
 }
