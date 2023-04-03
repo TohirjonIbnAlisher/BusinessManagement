@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Employee;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Application.Services.Employee;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,14 +44,16 @@ namespace BusinessManagement.Api.Controllers
 
             return Ok(selectedById);
         }
-
-        public IActionResult RetrieveAllEmployees()
+        [HttpGet]
+        public IActionResult RetrieveAllEmployees(
+            [FromQuery] QueryParameter queryParameter)
         {
-            var allEmployee = this.employeeService.RetrieveAllEmployeees();
+            var allEmployee = this.employeeService
+                .RetrieveAllEmployeees(queryParameter);
 
             return Ok(allEmployee);
         }
-
+        [HttpDelete("id : Guid")]
         public async ValueTask<ActionResult<EmployeeDTO>> DeleteEmployeeByIdAsync(Guid id)
         {
             var deletedEmployee = await this.employeeService

@@ -45,6 +45,8 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ILegalPersonService, LegalPersonService>();
         serviceCollection.AddScoped<IUsersService, UserService>();
 
+        serviceCollection.AddHttpContextAccessor();
+
         return serviceCollection;
     }
 }

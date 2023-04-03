@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,14 +41,16 @@ public class SystemManagerController : ControllerBase
 
         return Ok(selectedById);
     }
-
-    public IActionResult RetrieveAllSystemManagers()
+    [HttpGet]
+    public IActionResult RetrieveAllSystemManagers(
+        [FromQuery] QueryParameter queryParameter)
     {
-        var allUsers = this.usersService.RetrieveUsers();
+        var allUsers = this.usersService
+            .RetrieveUsers(queryParameter);
 
         return Ok(allUsers);
     }
-
+    [HttpDelete]
     public async ValueTask<ActionResult<UserDTO>> DeleteSystemManagerByIdAsync(Guid id)
     {
         var deletedUser = await this.usersService.RemoveUserAsync(id);
