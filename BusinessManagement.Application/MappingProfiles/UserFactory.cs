@@ -7,19 +7,32 @@ namespace BusinessManagement.Application.MappingProfiles;
 internal static class UserFactory
 {
     internal static Users MapToUser(
-        UserCreationDTO userCreationDTO)
+        UserCreationDTO userCreationDTO
+      /*IPasswordHasher passwordHasher*/)
     {
-        return new Users();
+        string randomsalt = Guid.NewGuid().ToString();
+        return new Users()
+        {
+            Id = Guid.NewGuid(),
+            Email = userCreationDTO.email,
+            Salt = randomsalt,
+            Roles = userCreationDTO.role,
+            PasswordHash = userCreationDTO.password
+        };
     }
     public static void MapToUser(
         Users storageUser,
         ModifyUserDTO modifyUserDTO)
     {
-        
+        storageUser.Email = modifyUserDTO.email ?? storageUser.Email;
+        storageUser.Roles = modifyUserDTO.role ?? storageUser.Roles;
     }
 
     internal static UserDTO MapToUserDto(Users user)
     {
-        return new UserDTO();
+        return new UserDTO(
+            id : user.Id,
+            email : user.Email,
+            role : user.Roles);
     }
 }
