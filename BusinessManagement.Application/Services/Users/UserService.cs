@@ -26,7 +26,7 @@ public class UserService : IUsersService
     public async ValueTask<UserDTO> ModifyUserAsync(ModifyUserDTO modifyUserDTO)
     {
         var storageUser = await this.userRepository
-            .SelectByIdAsync(modifyUserDTO.userId);
+            .SelectByIdAsync(modifyUserDTO.id);
 
         UserFactory.MapToUser(storageUser,modifyUserDTO);
 

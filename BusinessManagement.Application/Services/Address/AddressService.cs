@@ -32,9 +32,9 @@ public class AddressService : IAddressService
     {
         var selectedByIdAddress = await this.GetAddressByIdAsync(modifyAddressDTO.id);
 
-        AddressFactory.MapToModifyAddressDto(
+        AddressFactory.MapToAddress(
             modifyAddressDTO: modifyAddressDTO,
-            addresses: selectedByIdAddress);
+            address : selectedByIdAddress);
 
         var updatedAddress = await this.addressRepository
             .UpdateAsync(selectedByIdAddress);
