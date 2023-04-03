@@ -1,31 +1,65 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
+using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Infastructure.Repository;
 
 namespace BusinessManagement.Application.Services;
 
 public class UserService : IUsersService
 {
-    public ValueTask<UserDTO> CreateUserAsync(UserCreationDTO userCreationDTO)
+    private readonly IUserRepository userRepository;
+
+    public UserService(IUserRepository userRepository)
     {
-        throw new NotImplementedException();
+        this.userRepository = userRepository;
     }
 
-    public ValueTask<UserDTO> ModifyUserAsync(ModifyUserDTO modifyUserDTO)
+    public async ValueTask<UserDTO> CreateUserAsync(UserCreationDTO userCreationDTO)
     {
-        throw new NotImplementedException();
+        var newUser = UserFactory.MapToUser(userCreationDTO);
+
+        var addedUser = await this.userRepository
+            .InsertAsync(newUser);
+
+        return UserFactory.MapToUserDto(addedUser);
     }
 
-    public ValueTask<UserDTO> RemoveUserAsync(Guid userId)
+    public async ValueTask<UserDTO> ModifyUserAsync(ModifyUserDTO modifyUserDTO)
     {
-        throw new NotImplementedException();
+        var storageUser = await this.userRepository
+            .SelectByIdAsync(modifyUserDTO.userId);
+
+        UserFactory.MapToUser(storageUser,modifyUserDTO);
+
+        var modifiedUser = await this.userRepository
+            .UpdateAsync(storageUser);
+
+        return UserFactory.MapToUserDto(modifiedUser);
     }
 
-    public ValueTask<UserDTO> RetrieveUserByIdAsync(Guid userId)
+    public async ValueTask<UserDTO> RemoveUserAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        var storageUser = await this.userRepository
+           .SelectByIdAsync(userId);
+
+        var removedUser = await this.userRepository
+            .DeleteAsync(storageUser);
+
+        return UserFactory.MapToUserDto(removedUser);
+    }
+
+    public async ValueTask<UserDTO> RetrieveUserByIdAsync(Guid userId)
+    {
+        var storageUser = await this.userRepository
+            .SelectByIdAsync(userId);
+
+        return UserFactory.MapToUserDto(storageUser);
     }
 
     public IQueryable<UserDTO> RetrieveUsers()
     {
-        throw new NotImplementedException();
+        var users = this.userRepository
+            .SelectAll();
+
+        return users.Select(user => UserFactory.MapToUserDto(user));
     }
 }
