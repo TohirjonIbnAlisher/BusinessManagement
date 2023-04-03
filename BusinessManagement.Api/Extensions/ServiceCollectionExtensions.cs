@@ -1,11 +1,9 @@
-﻿using BusinessManagement.Application.Services.Address;
-using BusinessManagement.Application.Services;
+﻿using BusinessManagement.Application.Services;
+using BusinessManagement.Application.Services.Address;
+using BusinessManagement.Application.Services.Employee;
 using BusinessManagement.Infastructure.DbContexts;
 using BusinessManagement.Infastructure.Repository;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BusinessManagement.Application.Services.Employee;
 
 namespace BusinessManagement.Api.Extensions;
 
