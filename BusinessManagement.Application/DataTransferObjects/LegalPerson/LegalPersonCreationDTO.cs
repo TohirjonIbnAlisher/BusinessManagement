@@ -1,3 +1,11 @@
-﻿namespace BusinessManagement.Application.DataTransferObjects;
+﻿using BusinessManagement.Application.DataTransferObjects.Address;
+using BusinessManagement.Domain.Enums;
+
+namespace BusinessManagement.Application.DataTransferObjects;
 public record LegalPersonCreationDTO(
+    string name,
+    long INN,
+    string industryType,
+    LegalEntityType legalEntityType,
+    AddressDTO addressDTO
     );
