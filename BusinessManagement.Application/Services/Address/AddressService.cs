@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Address;
 using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Domain.Entities;
 using BusinessManagement.Infastructure.Repository;
 
 namespace BusinessManagement.Application.Services.Address;
@@ -21,26 +22,58 @@ public class AddressService : IAddressService
         var createdAddress = await this.addressRepository
             .InsertAsync(mappedAddress);
 
+        await this.addressRepository.SaveChangesAsync();
+
         return AddressFactory.MapToAddressDto(createdAddress);
     }
 
-    public ValueTask<AddressDTO> DeleteAddressAsync(Guid id)
+    public async ValueTask<AddressDTO> UpdateAddressAsync(
+        ModifyAddressDTO modifyAddressDTO)
     {
-        throw new NotImplementedException();
+        var selectedByIdAddress = await this.GetAddressByIdAsync(modifyAddressDTO.id);
+
+        AddressFactory.MapToModifyAddressDto(
+            modifyAddressDTO: modifyAddressDTO,
+            addresses: selectedByIdAddress);
+
+        var updatedAddress = await this.addressRepository
+            .UpdateAsync(selectedByIdAddress);
+
+        await this.addressRepository.SaveChangesAsync();
+
+        return AddressFactory.MapToAddressDto(updatedAddress);
+
+    }
+    public async ValueTask<AddressDTO> DeleteAddressAsync(Guid id)
+    {
+        var selectedByIdAddress = await this.GetAddressByIdAsync(id);
+
+        var deletedAddress = await this.addressRepository.DeleteAsync(selectedByIdAddress);
+
+        await this.addressRepository.SaveChangesAsync();
+
+        return AddressFactory.MapToAddressDto(deletedAddress);
+
     }
 
-    public ValueTask<AddressDTO> RetrieveAdressByIdAsync(Guid id)
+    public async ValueTask<AddressDTO> RetrieveAdressByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var selectedByIdAddress = await this.GetAddressByIdAsync(id);
+
+        return AddressFactory.MapToAddressDto(selectedByIdAddress);
     }
 
     public IQueryable<AddressDTO> RetrieveAllAddresses()
     {
-        throw new NotImplementedException();
+        var addresses = this.addressRepository.SelectAll();
+
+        return addresses.Select(address => AddressFactory.MapToAddressDto(address));
     }
 
-    public ValueTask<AddressDTO> UpdateAddressAsync(ModifyAddressDTO modifyAddressDTO)
+    private async ValueTask<Addresses> GetAddressByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var selectedAddress = await this.addressRepository.SelectByIdAsync(id);
+
+        return selectedAddress;
     }
 }

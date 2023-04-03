@@ -5,7 +5,8 @@ namespace BusinessManagement.Application.MappingProfiles;
 
 internal static class AddressFactory
 {
-    internal static Addresses MapToAddress(CreationAddressDTO creationAddressDTO)
+    internal static Addresses MapToAddress(
+        CreationAddressDTO creationAddressDTO)
     {
         return new Addresses(
             );
