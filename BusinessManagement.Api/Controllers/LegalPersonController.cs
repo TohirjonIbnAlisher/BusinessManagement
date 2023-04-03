@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,14 +45,16 @@ public class LegalPersonController : ControllerBase
 
         return Ok(selectedById);
     }
-
-    public IActionResult RetrieveAllLegalPersons()
+    [HttpGet]
+    public IActionResult RetrieveAllLegalPersons(
+        [FromQuery] QueryParameter queryParameter)
     {
-        var allLegalPersons = this.legalPersonService.RetrieveLegalPersons();
+        var allLegalPersons = this.legalPersonService
+            .RetrieveLegalPersons(queryParameter);
 
         return Ok(allLegalPersons);
     }
-
+    [HttpDelete("id : Guid")]
     public async ValueTask<ActionResult<LegalPersonDTO>> DeleteLegalPersonByIdAsync(Guid id)
     {
         var deletedLegalPerson = await this.legalPersonService.RemoveLegalPersonAsync(id);
