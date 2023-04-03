@@ -1,4 +1,6 @@
 
+using BusinessManagement.Api.Extensions;
+
 namespace BusinessManagement.Api
 {
     public class Program
@@ -8,6 +10,10 @@ namespace BusinessManagement.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddDbContexts(builder.Configuration)
+                .AddApplication()
+                .ConfigureRepositories();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +32,6 @@ namespace BusinessManagement.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

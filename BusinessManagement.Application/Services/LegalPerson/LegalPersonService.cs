@@ -31,7 +31,8 @@ public class LegalPersonService : ILegalPersonService
         return LegalPersonFactory.MapToLegalPersonDTO(addedLegalPerson);
     }
 
-    public async ValueTask<LegalPersonDTO> ModifyLegalPersonAsync(ModifyLegalPersonDTO modifyLegalPersonDTO)
+    public async ValueTask<LegalPersonDTO> ModifyLegalPersonAsync(
+        ModifyLegalPersonDTO modifyLegalPersonDTO)
     {
         var storageLegalPerson = await this._legalPersonRepository
             .SelectByIdAsync(modifyLegalPersonDTO.id);
