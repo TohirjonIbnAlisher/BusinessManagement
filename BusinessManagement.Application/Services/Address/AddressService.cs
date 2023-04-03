@@ -1,17 +1,22 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Address;
 using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Domain.Entities;
 using BusinessManagement.Infastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services.Address;
 
 public class AddressService : IAddressService
 {
     private readonly IAddressRepository addressRepository;
+    private readonly IHttpContextAccessor httpContextAccesssor;
 
-    public AddressService(IAddressRepository addressRepository)
+    public AddressService(IAddressRepository addressRepository,
+        IHttpContextAccessor httpContextAccesssor = null)
     {
         this.addressRepository = addressRepository;
+        this.httpContextAccesssor = httpContextAccesssor;
     }
 
     public async ValueTask<AddressDTO> CreateAddressAsync(
@@ -32,9 +37,9 @@ public class AddressService : IAddressService
     {
         var selectedByIdAddress = await this.GetAddressByIdAsync(modifyAddressDTO.id);
 
-        AddressFactory.MapToModifyAddressDto(
+        AddressFactory.MapToAddress(
             modifyAddressDTO: modifyAddressDTO,
-            addresses: selectedByIdAddress);
+            address: selectedByIdAddress);
 
         var updatedAddress = await this.addressRepository
             .UpdateAsync(selectedByIdAddress);
@@ -63,12 +68,19 @@ public class AddressService : IAddressService
         return AddressFactory.MapToAddressDto(selectedByIdAddress);
     }
 
-    public IQueryable<AddressDTO> RetrieveAllAddresses()
+    public IQueryable<AddressDTO> RetrieveAllAddresses(
+        QueryParameter queryParameter)
     {
         var addresses = this.addressRepository.SelectAll();
 
-        return addresses.Select(address => AddressFactory.MapToAddressDto(address));
+        var paginatedAddresses = addresses.PagedList(
+            httpContext: httpContextAccesssor.HttpContext,
+            queryParameter: queryParameter);
+
+        return paginatedAddresses.Select(address => 
+            AddressFactory.MapToAddressDto(address));
     }
+
 
     private async ValueTask<Addresses> GetAddressByIdAsync(Guid id)
     {

@@ -1,16 +1,21 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
 using BusinessManagement.Application.MappingProfiles;
+using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Infastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services;
 
 public class UserService : IUsersService
 {
     private readonly IUserRepository userRepository;
+    private readonly IHttpContextAccessor httpContextAccesssor;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository,
+        IHttpContextAccessor httpContextAccesssor = null)
     {
         this.userRepository = userRepository;
+        this.httpContextAccesssor = httpContextAccesssor;
     }
 
     public async ValueTask<UserDTO> CreateUserAsync(UserCreationDTO userCreationDTO)
@@ -26,7 +31,7 @@ public class UserService : IUsersService
     public async ValueTask<UserDTO> ModifyUserAsync(ModifyUserDTO modifyUserDTO)
     {
         var storageUser = await this.userRepository
-            .SelectByIdAsync(modifyUserDTO.userId);
+            .SelectByIdAsync(modifyUserDTO.id);
 
         UserFactory.MapToUser(storageUser,modifyUserDTO);
 
@@ -55,11 +60,16 @@ public class UserService : IUsersService
         return UserFactory.MapToUserDto(storageUser);
     }
 
-    public IQueryable<UserDTO> RetrieveUsers()
+    public IQueryable<UserDTO> RetrieveUsers(
+        QueryParameter queryParameter)
     {
         var users = this.userRepository
-            .SelectAll();
+        .SelectAll();
 
-        return users.Select(user => UserFactory.MapToUserDto(user));
+        var paginatedUsers = users.PagedList(
+            httpContext: httpContextAccesssor.HttpContext,
+            queryParameter: queryParameter);
+
+        return paginatedUsers.Select(user => UserFactory.MapToUserDto(user));
     }
 }

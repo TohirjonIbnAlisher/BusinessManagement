@@ -8,7 +8,7 @@ internal static class AddressFactory
     internal static Addresses MapToAddress(
         CreationAddressDTO creationAddressDTO)
     {
-        return new Addresses()
+        return new Addresses()  
         {
             Id = Guid.NewGuid(),
             Country = creationAddressDTO.country,
