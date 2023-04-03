@@ -7,5 +7,5 @@ public record LegalPersonCreationDTO(
     long INN,
     string industryType,
     LegalEntityType legalEntityType,
-    AddressDTO addressDTO
+    CreationAddressDTO addressDTO
     );

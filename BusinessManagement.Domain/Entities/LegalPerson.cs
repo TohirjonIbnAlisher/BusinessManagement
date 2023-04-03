@@ -12,7 +12,7 @@ namespace BusinessManagement.Domain.Entities
         public LegalEntityType LegalEntityType { get; set; }
         public Guid AddressId { get; set; }
         public Addresses Address { get; set; }
-        public ICollection<Employees> Employees { get; set; }
+        public ICollection<Employees>? Employees { get; set; }
 
     }
 

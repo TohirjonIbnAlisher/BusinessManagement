@@ -6,7 +6,7 @@ using BusinessManagement.Domain.Enums;
 namespace BusinessManagement.Application.DataTransferObjects;
 
 public record LegalPersonDTO(
-    Guid Id,
+    Guid id,
     DateTime RegistrationDate,
     string name,
     long INN,
