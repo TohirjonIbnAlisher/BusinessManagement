@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Address;
+using BusinessManagement.Application.DataTransferObjects.Employee;
 using BusinessManagement.Domain.Entities;
 using BusinessManagement.Domain.Enums;
 
