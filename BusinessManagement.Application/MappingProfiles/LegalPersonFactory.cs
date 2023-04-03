@@ -1,7 +1,5 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
-using BusinessManagement.Application.DataTransferObjects.Address;
 using BusinessManagement.Domain.Entities;
-using System.Net;
 
 namespace BusinessManagement.Application.MappingProfiles;
 

@@ -17,9 +17,6 @@ public class LegalPersonService : ILegalPersonService
     public async ValueTask<LegalPersonDTO> CreateLegalPersonAsync(
         LegalPersonCreationDTO legalPersonCreationDTO)
     {
-        var address = AddressFactory.MapToAddress(legalPersonCreationDTO.addressDTO);
-
-
         var newLegalPerson = LegalPersonFactory.MapToLegalPerson(legalPersonCreationDTO);
 
         var addedLegalPerson = await this._legalPersonRepository
