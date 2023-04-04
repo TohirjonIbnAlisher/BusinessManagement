@@ -18,7 +18,7 @@ internal static class LegalPersonFactory
             IndustryType = legalPersonCreationDTO.industryType,
             Address = address,
             LegalEntityType= legalPersonCreationDTO.legalEntityType,
-            RegistrationDate = DateTime.Now,
+            RegistrationDate = DateTime.UtcNow,
             AddressId = address.Id
         };
     }
@@ -29,22 +29,24 @@ internal static class LegalPersonFactory
         storageLegalPerson.Name = modifyLegalPersonDTO.name ?? storageLegalPerson.Name;
         storageLegalPerson.INN = modifyLegalPersonDTO.INN ?? storageLegalPerson.INN;
         storageLegalPerson.IndustryType = modifyLegalPersonDTO.industryType ?? storageLegalPerson.IndustryType;
-        storageLegalPerson.LegalEntityType = modifyLegalPersonDTO.legalEntityType ?? storageLegalPerson.LegalEntityType;
-        AddressFactory.MapToAddress(modifyLegalPersonDTO.modifyAddressDTO, storageLegalPerson.Address);   
+        storageLegalPerson.LegalEntityType = modifyLegalPersonDTO.legalEntityType ?? storageLegalPerson.LegalEntityType;   
     }
 
     internal static LegalPersonDTO MapToLegalPersonDTO(LegalPersons legalPerson)
     {
+        var empl = legalPerson.Employees != null ? legalPerson.Employees.Select(emp =>
+                EmployeeFactory.MapToEmployeeDto(emp)).ToList() : null;
+        var addres = legalPerson.Address != null ? AddressFactory.MapToAddressDto(legalPerson.Address) : null;
+
         return new LegalPersonDTO(
-            id : legalPerson.Id,
-            name : legalPerson.Name,
-            INN : legalPerson.INN,
-            industryType : legalPerson.IndustryType,
-            legalEntityType : legalPerson.LegalEntityType,
-            RegistrationDate : legalPerson.RegistrationDate,
-            addressDTO : AddressFactory.MapToAddressDto(legalPerson.Address),
-            employees : legalPerson.Employees.Select(emp => 
-                EmployeeFactory.MapToEmployeeDto(emp)).ToList()
-        );
+            id: legalPerson.Id,
+            name: legalPerson.Name,
+            INN: legalPerson.INN,
+            industryType: legalPerson.IndustryType,
+            legalEntityType: legalPerson.LegalEntityType,
+            RegistrationDate: legalPerson.RegistrationDate,
+            addressDTO: addres,
+            employees:  empl
+        ) ;
     }
 }

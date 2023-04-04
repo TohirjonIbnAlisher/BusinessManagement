@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessManagement.Infastructure.Migrations
 {
     [DbContext(typeof(BusinessManagementDbContext))]
-    [Migration("20230404012613_helperMigration")]
-    partial class helperMigration
+    [Migration("20230404024448_helper")]
+    partial class helper
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,7 +188,7 @@ namespace BusinessManagement.Infastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7573ed56-5001-4c0e-9f11-3ea13c091497"),
+                            Id = new Guid("8baedcba-5583-4213-8aac-0c887850676c"),
                             Email = "tohirjon@gmail.com",
                             PasswordHash = "CpIfqxhj+TTpahN/mIXdhnuFqX+3Khkqhwv0K+TVdMo=",
                             Roles = 1,

@@ -28,6 +28,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "SystemManager")]
+    [HttpPut]
     public async ValueTask<ActionResult<UserDTO>> ModifyUserAsync(
         ModifyUserDTO modifyUserDTO)
     {

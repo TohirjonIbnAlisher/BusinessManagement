@@ -14,4 +14,5 @@ public record ModifyEmployeeDTO(
     decimal? salary,
     string? tellNumber,
     Guid? legalPersonId,
-    ModifyAddressDTO? addressDTO);
+    ModifyAddressDTO? addressDTO,
+    Guid? UserId);

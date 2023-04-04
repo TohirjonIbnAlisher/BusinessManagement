@@ -1,6 +1,6 @@
-﻿using BusinessManagement.Application.DataTransferObjects.Address;
-using BusinessManagement.Application.DataTransferObjects;
+﻿using BusinessManagement.Application.DataTransferObjects;
 using BusinessManagement.Domain.Entities;
+using BusinessManagement.Domain.Enums;
 using BusinessManagement.Infrastructure.Authentication;
 
 namespace BusinessManagement.Application.MappingProfiles;
@@ -17,7 +17,7 @@ internal static class UserFactory
             Id = Guid.NewGuid(),
             Email = userCreationDTO.email,
             Salt = randomsalt,
-            Roles = userCreationDTO.role,
+            Roles = Roles.SystemManager,
             PasswordHash = passwordHasher.GeneratePassword(
                 userCreationDTO.password,
                 randomsalt)
@@ -28,7 +28,6 @@ internal static class UserFactory
         ModifyUserDTO modifyUserDTO)
     {
         storageUser.Email = modifyUserDTO.email ?? storageUser.Email;
-        storageUser.Roles = modifyUserDTO.role ?? storageUser.Roles;
     }
 
     internal static UserDTO MapToUserDto(Users user)
@@ -36,6 +35,6 @@ internal static class UserFactory
         return new UserDTO(
             id : user.Id,
             email : user.Email,
-            role : user.Roles);
+            role : Roles.SystemManager);
     }
 }
