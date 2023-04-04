@@ -19,10 +19,6 @@ internal static class EmployeeFactory
             Id = Guid.NewGuid(),
             FirstName = creationEmployeeDTO.firstName,
             LastName = creationEmployeeDTO.lastName,
-            Email = creationEmployeeDTO.email,
-            PasswordHash = creationEmployeeDTO.password,
-            Roles = creationEmployeeDTO.role,
-            Salt = randomSalt,
             Salary = creationEmployeeDTO.salary,
             JobPosition = creationEmployeeDTO.jobPosition,
             EmploymentType = creationEmployeeDTO.employmentType,
@@ -40,8 +36,6 @@ internal static class EmployeeFactory
     {
         employee.FirstName = modifyEmployeeDTO.firstName ?? employee.FirstName;
         employee.LastName = modifyEmployeeDTO.lastName ?? employee.LastName;
-        employee.Email = modifyEmployeeDTO.email ?? employee.Email;
-        employee.Roles = modifyEmployeeDTO.role?? employee.Roles;
         employee.TellNumber = modifyEmployeeDTO.tellNumber ?? employee.TellNumber;
         employee.Salary = modifyEmployeeDTO.salary ?? employee.Salary;
         employee.EmploymentType = modifyEmployeeDTO.employmentType ?? employee.EmploymentType;
@@ -57,13 +51,12 @@ internal static class EmployeeFactory
             id: employee.Id,
             firstName: employee.FirstName,
             lastName: employee.LastName,
-            email: employee.Email,
-            role: employee.Roles,
             jobPosition: employee.JobPosition,
             employmentType: employee.EmploymentType,
             salary: employee.Salary,
             tellNumber: employee.TellNumber,
             legalPersonDTO: LegalPersonFactory.MapToLegalPersonDTO(employee.LegalPerson)?? null,
-            addressDTO: AddressFactory.MapToAddressDto(employee.Address) ?? null);
+            addressDTO: AddressFactory.MapToAddressDto(employee.Address) ?? null,
+            userDTO : UserFactory.MapToUserDto(employee.User));
     }
 }

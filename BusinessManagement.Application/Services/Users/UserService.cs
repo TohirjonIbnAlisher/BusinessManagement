@@ -2,6 +2,7 @@
 using BusinessManagement.Application.MappingProfiles;
 using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Infastructure.Repository;
+using BusinessManagement.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services;
@@ -10,17 +11,21 @@ public class UserService : IUsersService
 {
     private readonly IUserRepository userRepository;
     private readonly IHttpContextAccessor httpContextAccesssor;
+    private readonly IPasswordHasher passwordHasher;
 
     public UserService(IUserRepository userRepository,
-        IHttpContextAccessor httpContextAccesssor = null)
+        IHttpContextAccessor httpContextAccesssor,
+        IPasswordHasher passwordHasher)
     {
         this.userRepository = userRepository;
         this.httpContextAccesssor = httpContextAccesssor;
+        this.passwordHasher = passwordHasher;
     }
 
     public async ValueTask<UserDTO> CreateUserAsync(UserCreationDTO userCreationDTO)
     {
-        var newUser = UserFactory.MapToUser(userCreationDTO);
+        var newUser = UserFactory.MapToUser(userCreationDTO,
+            passwordHasher);
 
         var addedUser = await this.userRepository
             .InsertAsync(newUser);

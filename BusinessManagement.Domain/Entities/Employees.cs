@@ -2,8 +2,9 @@
 
 namespace BusinessManagement.Domain.Entities;
 
-public class Employees : Users
+public class Employees
 {
+    public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string? LastName { get; set; }
     public string JobPosition { get; set; }
@@ -14,4 +15,6 @@ public class Employees : Users
     public LegalPersons LegalPerson { get; set; }
     public Guid AddressId { get; set; }
     public Addresses Address { get; set; }
+    public Guid UserId { get; set; }
+    public Users User { get; set; }
 }

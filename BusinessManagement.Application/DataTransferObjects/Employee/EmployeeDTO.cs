@@ -7,11 +7,10 @@ public record EmployeeDTO(
     Guid id,
     string firstName,
     string? lastName,
-    string email,
-    Roles role,
     string jobPosition,
     EmploymentType employmentType,
     decimal salary,
     string tellNumber,
     LegalPersonDTO legalPersonDTO,
-    AddressDTO addressDTO);
+    AddressDTO addressDTO,
+    UserDTO userDTO );

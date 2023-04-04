@@ -13,7 +13,8 @@ namespace BusinessManagement.Api
 
             builder.Services.AddDbContexts(builder.Configuration)
                 .AddApplication()
-                .ConfigureRepositories();
+                .ConfigureRepositories()
+                .AutentificationService(builder.Configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,14 +1,15 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Address;
 using BusinessManagement.Application.DataTransferObjects;
 using BusinessManagement.Domain.Entities;
+using BusinessManagement.Infrastructure.Authentication;
 
 namespace BusinessManagement.Application.MappingProfiles;
 
 internal static class UserFactory
 {
     internal static Users MapToUser(
-        UserCreationDTO userCreationDTO
-      /*IPasswordHasher passwordHasher*/)
+        UserCreationDTO userCreationDTO,
+        IPasswordHasher passwordHasher)
     {
         string randomsalt = Guid.NewGuid().ToString();
         return new Users()
@@ -17,7 +18,9 @@ internal static class UserFactory
             Email = userCreationDTO.email,
             Salt = randomsalt,
             Roles = userCreationDTO.role,
-            PasswordHash = userCreationDTO.password
+            PasswordHash = passwordHasher.GeneratePassword(
+                userCreationDTO.password,
+                randomsalt)
         };
     }
     public static void MapToUser(

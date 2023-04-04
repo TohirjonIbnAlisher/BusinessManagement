@@ -29,10 +29,9 @@ public class UsersConfiguration : IEntityTypeConfiguration<Users>
         {
             Id = Guid.NewGuid(),
             Email = "tohirjon@gmail.com",
-            Salt = "a9feaa2d-8692-4d2e-bf64-3d8200ad8c8b",
+            Salt = "e780c737-85b6-4345-9e72-1eb2c9833532",
             Roles = Roles.SystemManager,
-            PasswordHash = ""
-
+            PasswordHash = "CpIfqxhj+TTpahN/mIXdhnuFqX+3Khkqhwv0K+TVdMo="
         });
     }
 }

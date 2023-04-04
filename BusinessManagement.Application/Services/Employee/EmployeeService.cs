@@ -2,7 +2,9 @@
 using BusinessManagement.Application.MappingProfiles;
 using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Domain.Entities;
+using BusinessManagement.Domain.Enums;
 using BusinessManagement.Infastructure.Repository;
+using BusinessManagement.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace BusinessManagement.Application.Services.Employee;
@@ -11,17 +13,34 @@ public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository employeeRepository;
     private readonly IHttpContextAccessor httpContextAccesssor;
+    private readonly IPasswordHasher passwordHasher;
+    private readonly IUserRepository userRepository;
 
     public EmployeeService(IEmployeeRepository employeeRepository,
-        IHttpContextAccessor httpContextAccesssor = null)
+        IHttpContextAccessor httpContextAccesssor,
+        IPasswordHasher passwordHasher,
+        IUserRepository userRepository)
     {
         this.employeeRepository = employeeRepository;
         this.httpContextAccesssor = httpContextAccesssor;
+        this.passwordHasher = passwordHasher;
+        this.userRepository = userRepository;
     }
 
     public async ValueTask<EmployeeDTO> CreateEmployeeAsync(
         CreationEmployeeDTO creationEmployeeDTO)
     {
+        var user = new Users()
+        {
+            Email = creationEmployeeDTO.email,
+            PasswordHash = this.passwordHasher.GeneratePassword(
+                creationEmployeeDTO.password,
+                Guid.NewGuid().ToString()),
+            Roles = creationEmployeeDTO.role
+        };
+
+        var createdUser = await this.userRepository.InsertAsync(user);
+
         var mappedEmployee = EmployeeFactory.MapToEmployee(creationEmployeeDTO);
 
         var createdEmployee = await this.employeeRepository.InsertAsync(mappedEmployee);
