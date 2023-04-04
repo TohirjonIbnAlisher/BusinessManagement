@@ -1,6 +1,7 @@
 ﻿using BusinessManagement.Application.DataTransferObjects.Employee;
 using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Application.Services.Employee;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -16,6 +17,7 @@ public class EmployeeController : ControllerBase
         this.employeeService = employeeService;
     }
 
+    [Authorize(Roles = "SystemManager, BusinessManager")]
     [HttpPost]
     public async ValueTask<ActionResult<EmployeeDTO>> CreateEmployeeAsync(
         CreationEmployeeDTO creationEmployeeDTO)
@@ -26,6 +28,7 @@ public class EmployeeController : ControllerBase
         return Created("", createdEmployee);
     }
 
+    [Authorize(Roles = "SystemManager, BusinessManager")]
     [HttpPut]
     public async ValueTask<ActionResult<EmployeeDTO>> ModifyEmployeeAsync(
         ModifyEmployeeDTO modifyEmployeeDTO)
@@ -36,6 +39,7 @@ public class EmployeeController : ControllerBase
         return Ok(modifiedEmployee);
     }
 
+    [Authorize(Roles = "SystemManager, BusinessManager")]
     [HttpGet("id : Guid")]
     public async ValueTask<ActionResult<EmployeeDTO>> RetrieveEmployeeAsync(Guid id)
     {
@@ -43,22 +47,26 @@ public class EmployeeController : ControllerBase
             .RetrieveEmployeeByIdAsync(id);
 
             return Ok(selectedById);
-        }
-        [HttpGet]
-        public IActionResult RetrieveAllEmployees(
-            [FromQuery] QueryParameter queryParameter)
-        {
-            var allEmployee = this.employeeService
-                .RetrieveAllEmployeees(queryParameter);
+    }
 
-            return Ok(allEmployee);
-        }
-        [HttpDelete("id : Guid")]
-        public async ValueTask<ActionResult<EmployeeDTO>> DeleteEmployeeByIdAsync(Guid id)
-        {
-            var deletedEmployee = await this.employeeService
-                .DeleteEmployeeAsync(id);
+    [Authorize(Roles = "SystemManager, BusinessManager")]
+    [HttpGet]
+    public IActionResult RetrieveAllEmployees(
+        [FromQuery] QueryParameter queryParameter)
+    {
+        var allEmployee = this.employeeService
+            .RetrieveAllEmployeees(queryParameter);
 
-        return Ok(deletedEmployee);
+        return Ok(allEmployee);
+    }
+
+    [Authorize(Roles = "SystemManager, BusinessManager")]
+    [HttpDelete("id : Guid")]
+    public async ValueTask<ActionResult<EmployeeDTO>> DeleteEmployeeByIdAsync(Guid id)
+    {
+        var deletedEmployee = await this.employeeService
+            .DeleteEmployeeAsync(id);
+
+    return Ok(deletedEmployee);
     }
 }
