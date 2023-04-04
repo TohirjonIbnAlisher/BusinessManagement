@@ -1,6 +1,7 @@
 ﻿using BusinessManagement.Application.DataTransferObjects;
 using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -17,7 +18,7 @@ public class LegalPersonController : ControllerBase
         this.legalPersonService = legalPersonService;
     }
 
-
+    [Authorize(Roles = "SystemManager")]
     [HttpPost]
     public async ValueTask<ActionResult<LegalPersonDTO>> CreateLegalPersonAsync(
         LegalPersonCreationDTO legalPersonCreationDTO)
@@ -28,6 +29,7 @@ public class LegalPersonController : ControllerBase
         return Created("", createdLegalPerson);
     }
 
+    [Authorize(Roles = "SystemManager")]
     [HttpPut]
     public async ValueTask<ActionResult<LegalPersonDTO>> ModifyLegalPersonAsync(
         ModifyLegalPersonDTO modifyLegalPersonDTO)
@@ -38,6 +40,7 @@ public class LegalPersonController : ControllerBase
         return Ok(modifiedLegalPerson);
     }
 
+    [Authorize(Roles = "SystemManager")]
     [HttpGet("id : Guid")]
     public async ValueTask<ActionResult<LegalPersonDTO>> RetrieveLegalPersonAsync(Guid id)
     {
@@ -45,6 +48,8 @@ public class LegalPersonController : ControllerBase
 
         return Ok(selectedById);
     }
+
+    [Authorize(Roles = "SystemManager")]
     [HttpGet]
     public IActionResult RetrieveAllLegalPersons(
         [FromQuery] QueryParameter queryParameter)
@@ -54,6 +59,8 @@ public class LegalPersonController : ControllerBase
 
         return Ok(allLegalPersons);
     }
+
+    [Authorize(Roles = "SystemManager")]
     [HttpDelete("id : Guid")]
     public async ValueTask<ActionResult<LegalPersonDTO>> DeleteLegalPersonByIdAsync(Guid id)
     {
