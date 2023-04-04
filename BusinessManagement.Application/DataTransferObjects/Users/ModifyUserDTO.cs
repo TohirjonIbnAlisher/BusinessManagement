@@ -4,5 +4,4 @@ namespace BusinessManagement.Application.DataTransferObjects;
 
 public record ModifyUserDTO(
     Guid id,
-    string? email,
-    Roles? role);
+    string? email);

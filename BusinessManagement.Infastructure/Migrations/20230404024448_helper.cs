@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BusinessManagement.Infastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class helper : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,12 +80,7 @@ namespace BusinessManagement.Infastructure.Migrations
                     TellNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     LegalPersonId = table.Column<Guid>(type: "uuid", nullable: false),
                     AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Salt = table.Column<string>(type: "text", nullable: false),
-                    RefreshToken = table.Column<string>(type: "text", nullable: true),
-                    ExpiredRefreshToken = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Roles = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,12 +97,18 @@ namespace BusinessManagement.Infastructure.Migrations
                         principalTable: "LegalPersons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Employees_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "ExpiredRefreshToken", "PasswordHash", "RefreshToken", "Roles", "Salt" },
-                values: new object[] { new Guid("0d9c9d0a-47b3-4be2-966c-6fbea330eff9"), "tohirjon@gmail.com", null, "", null, 1, "a9feaa2d-8692-4d2e-bf64-3d8200ad8c8b" });
+                values: new object[] { new Guid("8baedcba-5583-4213-8aac-0c887850676c"), "tohirjon@gmail.com", null, "CpIfqxhj+TTpahN/mIXdhnuFqX+3Khkqhwv0K+TVdMo=", null, 1, "e780c737-85b6-4345-9e72-1eb2c9833532" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_AddressId",
@@ -119,6 +120,12 @@ namespace BusinessManagement.Infastructure.Migrations
                 name: "IX_Employees_LegalPersonId",
                 table: "Employees",
                 column: "LegalPersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_UserId",
+                table: "Employees",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LegalPersons_AddressId",
@@ -146,10 +153,10 @@ namespace BusinessManagement.Infastructure.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "LegalPersons");
 
             migrationBuilder.DropTable(
-                name: "LegalPersons");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

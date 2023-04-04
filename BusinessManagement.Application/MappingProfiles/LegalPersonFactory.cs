@@ -29,8 +29,7 @@ internal static class LegalPersonFactory
         storageLegalPerson.Name = modifyLegalPersonDTO.name ?? storageLegalPerson.Name;
         storageLegalPerson.INN = modifyLegalPersonDTO.INN ?? storageLegalPerson.INN;
         storageLegalPerson.IndustryType = modifyLegalPersonDTO.industryType ?? storageLegalPerson.IndustryType;
-        storageLegalPerson.LegalEntityType = modifyLegalPersonDTO.legalEntityType ?? storageLegalPerson.LegalEntityType;
-        AddressFactory.MapToAddress(modifyLegalPersonDTO.modifyAddressDTO, storageLegalPerson.Address);   
+        storageLegalPerson.LegalEntityType = modifyLegalPersonDTO.legalEntityType ?? storageLegalPerson.LegalEntityType;   
     }
 
     internal static LegalPersonDTO MapToLegalPersonDTO(LegalPersons legalPerson)

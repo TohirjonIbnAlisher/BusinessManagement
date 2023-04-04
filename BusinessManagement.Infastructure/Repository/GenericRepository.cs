@@ -18,8 +18,6 @@ namespace BusinessManagement.Infastructure.Repository
             var entityEntry = await this.appDbContext
                 .AddAsync<TEntity>(entity);
 
-            await this.SaveChangesAsync();
-
             return entityEntry.Entity;
         }
 
@@ -48,8 +46,6 @@ namespace BusinessManagement.Infastructure.Repository
             var entityEntry = this.appDbContext
                 .Update<TEntity>(entity);
 
-            await this.SaveChangesAsync();
-
             return entityEntry.Entity;
         }
 
@@ -58,8 +54,6 @@ namespace BusinessManagement.Infastructure.Repository
             var entityEntry = this.appDbContext
                 .Set<TEntity>()
                 .Remove(entity);
-
-            await this.SaveChangesAsync();
 
             return entityEntry.Entity;
         }

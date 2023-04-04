@@ -6,27 +6,20 @@ namespace BusinessManagement.Application.MappingProfiles;
 internal static class EmployeeFactory
 {
    internal static Employees MapToEmployee(
-       CreationEmployeeDTO creationEmployeeDTO)
+       CreationEmployeeDTO creationEmployeeDTO,
+       Employees employee)
     {
-        var address = AddressFactory.MapToAddress(
-                creationEmployeeDTO.CreationAddressDTO);
 
-        var randomSalt = Guid.NewGuid().ToString();
-
-        return new Employees()
-        {
-            Id = Guid.NewGuid(),
-            FirstName = creationEmployeeDTO.firstName,
-            LastName = creationEmployeeDTO.lastName,
-            Salary = creationEmployeeDTO.salary,
-            JobPosition = creationEmployeeDTO.jobPosition,
-            EmploymentType = creationEmployeeDTO.employmentType,
-            TellNumber = creationEmployeeDTO.tellNumber,
-            LegalPersonId = creationEmployeeDTO.legalPersonId,
-            Address = address,
-            AddressId = address.Id,
-
-        };
+        employee.Id = Guid.NewGuid();
+        employee.FirstName = creationEmployeeDTO.firstName;
+        employee.LastName = creationEmployeeDTO.lastName;
+        employee.Salary = creationEmployeeDTO.salary;
+        employee.JobPosition = creationEmployeeDTO.jobPosition;
+        employee.EmploymentType = creationEmployeeDTO.employmentType;
+        employee.TellNumber = creationEmployeeDTO.tellNumber;
+        employee.LegalPersonId = creationEmployeeDTO.legalPersonId;
+        
+        return employee;
     }
 
     internal static void MapToEmployee(
@@ -40,7 +33,7 @@ internal static class EmployeeFactory
         employee.EmploymentType = modifyEmployeeDTO.employmentType ?? employee.EmploymentType;
         employee.JobPosition = modifyEmployeeDTO.jobPosition ?? employee.JobPosition;
         employee.LegalPersonId = modifyEmployeeDTO.legalPersonId ?? employee.LegalPersonId;
-        AddressFactory.MapToAddress(modifyEmployeeDTO.addressDTO, employee.Address);
+        employee.UserId = modifyEmployeeDTO.UserId?? employee.UserId;
     }
 
     internal static EmployeeDTO MapToEmployeeDto(
@@ -48,7 +41,6 @@ internal static class EmployeeFactory
     {
         var user = employee.User != null ? UserFactory.MapToUserDto(employee.User) : null;
         var addres = employee.Address != null ? AddressFactory.MapToAddressDto(employee.Address) : null;
-
         return new EmployeeDTO(
             id: employee.Id,
             firstName: employee.FirstName,
@@ -57,7 +49,7 @@ internal static class EmployeeFactory
             employmentType: employee.EmploymentType,
             salary: employee.Salary,
             tellNumber: employee.TellNumber,
-            legalPersonDTO: LegalPersonFactory.MapToLegalPersonDTO(employee.LegalPerson)?? null,
+            legalPersonId: employee.LegalPersonId,
             addressDTO: addres,
             userDTO : user);
     }

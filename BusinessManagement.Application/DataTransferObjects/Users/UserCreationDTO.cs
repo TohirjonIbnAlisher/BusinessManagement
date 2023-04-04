@@ -4,5 +4,4 @@ namespace BusinessManagement.Application.DataTransferObjects;
 
 public record UserCreationDTO(
     string email,
-    string password,
-    Roles role);
+    string password);

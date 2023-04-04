@@ -46,7 +46,7 @@ public partial class AuthenticationService : IAuthenticationService
 
         storageUser.RefreshToken = createdRefreshToken;
 
-        storageUser.ExpiredRefreshToken = DateTime.Now.AddDays(5);
+        storageUser.ExpiredRefreshToken = DateTime.UtcNow.AddDays(5);
 
         var updateUser = await this.userRepository
             .UpdateAsync(storageUser);

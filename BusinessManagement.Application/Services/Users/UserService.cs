@@ -46,16 +46,6 @@ public class UserService : IUsersService
         return UserFactory.MapToUserDto(modifiedUser);
     }
 
-    public async ValueTask<UserDTO> RemoveUserAsync(Guid userId)
-    {
-        var storageUser = await this.userRepository
-           .SelectByIdAsync(userId);
-
-        var removedUser = await this.userRepository
-            .DeleteAsync(storageUser);
-
-        return UserFactory.MapToUserDto(removedUser);
-    }
 
     public async ValueTask<UserDTO> RetrieveUserByIdAsync(Guid userId)
     {
@@ -76,5 +66,15 @@ public class UserService : IUsersService
             queryParameter: queryParameter);
 
         return paginatedUsers.Select(user => UserFactory.MapToUserDto(user));
+    }
+    public async ValueTask<UserDTO> RemoveUserAsync(Guid userId)
+    {
+        var storageUser = await this.userRepository
+           .SelectByIdAsync(userId);
+
+        var removedUser = await this.userRepository
+            .DeleteAsync(storageUser);
+
+        return UserFactory.MapToUserDto(removedUser);
     }
 }

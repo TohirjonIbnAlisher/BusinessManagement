@@ -2,7 +2,6 @@
 using BusinessManagement.Application.MappingProfiles;
 using BusinessManagement.Application.ServiceModel;
 using BusinessManagement.Domain.Entities;
-using BusinessManagement.Domain.Enums;
 using BusinessManagement.Infastructure.Repository;
 using BusinessManagement.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -15,33 +14,49 @@ public class EmployeeService : IEmployeeService
     private readonly IHttpContextAccessor httpContextAccesssor;
     private readonly IPasswordHasher passwordHasher;
     private readonly IUserRepository userRepository;
+    private readonly IAddressRepository addressRepository;
 
     public EmployeeService(IEmployeeRepository employeeRepository,
         IHttpContextAccessor httpContextAccesssor,
         IPasswordHasher passwordHasher,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IAddressRepository addressRepository)
     {
         this.employeeRepository = employeeRepository;
         this.httpContextAccesssor = httpContextAccesssor;
         this.passwordHasher = passwordHasher;
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     public async ValueTask<EmployeeDTO> CreateEmployeeAsync(
         CreationEmployeeDTO creationEmployeeDTO)
     {
+        var salt = Guid.NewGuid().ToString();
         var user = new Users()
         {
+            Id = Guid.NewGuid(),
             Email = creationEmployeeDTO.email,
             PasswordHash = this.passwordHasher.GeneratePassword(
                 creationEmployeeDTO.password,
-                Guid.NewGuid().ToString()),
-            Roles = creationEmployeeDTO.role
+                salt),
+            Roles = creationEmployeeDTO.role,
+            Salt = salt
         };
 
-        var createdUser = await this.userRepository.InsertAsync(user);
+        var employee = new Employees();
 
-        var mappedEmployee = EmployeeFactory.MapToEmployee(creationEmployeeDTO);
+        var createdUser = await this.userRepository.InsertAsync(user);
+        employee.UserId = createdUser.Id;
+
+        var mappedAddress = AddressFactory.MapToAddress(creationEmployeeDTO.CreationAddressDTO);
+
+        var createdAddress = await this.addressRepository.InsertAsync(mappedAddress);
+        employee.AddressId = createdAddress.Id;
+
+        var mappedEmployee = EmployeeFactory.MapToEmployee(
+            creationEmployeeDTO,
+            employee);
 
         var createdEmployee = await this.employeeRepository.InsertAsync(mappedEmployee);
 
@@ -56,6 +71,11 @@ public class EmployeeService : IEmployeeService
     {
         var selectedEmployee = await this.GetEmployeeByExpressionAsync(
             modifyEmployeeDTO.id);
+
+        AddressFactory.MapToAddress(
+            modifyEmployeeDTO.addressDTO,
+            selectedEmployee.Address);
+        var updatedAddress = await this.addressRepository.UpdateAsync(selectedEmployee.Address);
 
         EmployeeFactory.MapToEmployee(
             employee: selectedEmployee,
@@ -93,6 +113,10 @@ public class EmployeeService : IEmployeeService
         var selectedEmployee = await this.GetEmployeeByExpressionAsync(id);
         
         var deletedEmployee = await this.employeeRepository.DeleteAsync(selectedEmployee);
+        await this.userRepository.DeleteAsync(selectedEmployee.User);
+        await this.addressRepository.DeleteAsync(selectedEmployee.Address);
+
+        await this.employeeRepository.SaveChangesAsync();
 
         return EmployeeFactory.MapToEmployeeDto(deletedEmployee);
     }
@@ -100,7 +124,7 @@ public class EmployeeService : IEmployeeService
     {
         var retrievedEmployee = await this.employeeRepository
             .SelectByIdWithDetailsAsync(employee => employee.Id == id,
-            new string[] { "Address", "LegalPerson" });
+            new string[] { "Address", "LegalPerson", "User" });
 
         return retrievedEmployee;
     }
