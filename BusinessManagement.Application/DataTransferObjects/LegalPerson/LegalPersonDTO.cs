@@ -12,5 +12,5 @@ public record LegalPersonDTO(
     long INN,
     string industryType,
     LegalEntityType legalEntityType,
-    AddressDTO addressDTO, 
-    ICollection<EmployeeDTO> employees);
+    AddressDTO? addressDTO, 
+    ICollection<EmployeeDTO>? employees);

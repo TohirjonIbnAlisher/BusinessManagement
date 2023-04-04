@@ -59,7 +59,9 @@ public class LegalPersonService : ILegalPersonService
     public async ValueTask<LegalPersonDTO> RetrieveLegalPersonByIdAsync(Guid Id)
     {
         var storageLegalPerson = await this._legalPersonRepository
-            .SelectByIdAsync(Id);
+            .SelectByIdWithDetailsAsync(
+            legPer => legPer.Id == Id,
+            new string[] {"Address", "Employees"});
 
         return LegalPersonFactory.MapToLegalPersonDTO(storageLegalPerson);
     }

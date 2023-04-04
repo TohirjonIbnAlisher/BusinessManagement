@@ -11,6 +11,6 @@ public record EmployeeDTO(
     EmploymentType employmentType,
     decimal salary,
     string tellNumber,
-    LegalPersonDTO legalPersonDTO,
-    AddressDTO addressDTO,
-    UserDTO userDTO );
+    LegalPersonDTO? legalPersonDTO,
+    AddressDTO? addressDTO,
+    UserDTO? userDTO);

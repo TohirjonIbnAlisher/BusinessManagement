@@ -1,5 +1,4 @@
-﻿using BusinessManagement.Application.DataTransferObjects;
-using BusinessManagement.Application.DataTransferObjects.Employee;
+﻿using BusinessManagement.Application.DataTransferObjects.Employee;
 using BusinessManagement.Domain.Entities;
 
 namespace BusinessManagement.Application.MappingProfiles;
@@ -47,6 +46,9 @@ internal static class EmployeeFactory
     internal static EmployeeDTO MapToEmployeeDto(
         Employees employee)
     {
+        var user = employee.User != null ? UserFactory.MapToUserDto(employee.User) : null;
+        var addres = employee.Address != null ? AddressFactory.MapToAddressDto(employee.Address) : null;
+
         return new EmployeeDTO(
             id: employee.Id,
             firstName: employee.FirstName,
@@ -56,7 +58,7 @@ internal static class EmployeeFactory
             salary: employee.Salary,
             tellNumber: employee.TellNumber,
             legalPersonDTO: LegalPersonFactory.MapToLegalPersonDTO(employee.LegalPerson)?? null,
-            addressDTO: AddressFactory.MapToAddressDto(employee.Address) ?? null,
-            userDTO : UserFactory.MapToUserDto(employee.User));
+            addressDTO: addres,
+            userDTO : user);
     }
 }
